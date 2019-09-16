@@ -26,7 +26,7 @@ public interface WorkflowEntry {
 	/**
 	 * Returns the unique ID of the workflow entry.
 	 */
-	public long getId();
+	public String getId();
 
 	/**
 	 * Returns true if the workflow entry has been initialized.

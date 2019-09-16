@@ -106,7 +106,7 @@ public class JDBCWorkflowStore implements WorkflowStore {
     // ~ Methods
     // ////////////////////////////////////////////////////////////////
 
-    public void setEntryState(long id, int state) throws StoreException {
+    public void setEntryState(String id, int state) throws StoreException {
         Connection conn = null;
         PreparedStatement ps = null;
 
@@ -116,7 +116,7 @@ public class JDBCWorkflowStore implements WorkflowStore {
             String sql = "UPDATE " + entryTable + " SET " + entryState + " = ? WHERE " + entryId + " = ?";
             ps = conn.prepareStatement(sql);
             ps.setInt(1, state);
-            ps.setLong(2, id);
+            ps.setString(2, id);
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new StoreException("Unable to update state for workflow instance #" + id + " to " + state, e);
@@ -125,7 +125,7 @@ public class JDBCWorkflowStore implements WorkflowStore {
         }
     }
 
-    public PropertySet getPropertySet(long entryId) {
+    public PropertySet getPropertySet(String entryId) {
         HashMap args = new HashMap(1);
         args.put("globalKey", "osff_" + entryId);
 
@@ -164,13 +164,13 @@ public class JDBCWorkflowStore implements WorkflowStore {
         return false;
     }
 
-    public Step createCurrentStep(long entryId, int wfStepId, String owner, Date startDate, Date dueDate, String status, long[] previousIds) throws StoreException {
+    public Step createCurrentStep(String entryId, int wfStepId, String owner, Date startDate, Date dueDate, String status, String[] previousIds) throws StoreException {
         Connection conn = null;
 
         try {
             conn = getConnection();
 
-            long id = createCurrentStep(conn, entryId, wfStepId, owner, startDate, dueDate, status);
+            String id = createCurrentStep(conn, entryId, wfStepId, owner, startDate, dueDate, status);
             addPreviousSteps(conn, id, previousIds);
 
             return new SimpleStep(id, entryId, wfStepId, 0, owner, startDate, dueDate, null, status, previousIds, null);
@@ -196,8 +196,8 @@ public class JDBCWorkflowStore implements WorkflowStore {
 
             stmt = conn.prepareStatement(sql);
 
-            long id = getNextEntrySequence(conn);
-            stmt.setLong(1, id);
+            String id = String.valueOf(getNextEntrySequence(conn));
+            stmt.setString(1, id);
             stmt.setString(2, workflowName);
             stmt.setInt(3, WorkflowEntry.CREATED);
             stmt.setInt(4, 0);
@@ -211,7 +211,7 @@ public class JDBCWorkflowStore implements WorkflowStore {
         }
     }
 
-    public List findCurrentSteps(long entryId) throws StoreException {
+    public List findCurrentSteps(String entryId) throws StoreException {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rset = null;
@@ -235,14 +235,14 @@ public class JDBCWorkflowStore implements WorkflowStore {
             }
 
             stmt2 = conn.prepareStatement(sql2);
-            stmt.setLong(1, entryId);
+            stmt.setString(1, entryId);
 
             rset = stmt.executeQuery();
 
             ArrayList currentSteps = new ArrayList();
 
             while (rset.next()) {
-                long id = rset.getLong(1);
+                String id = rset.getString(1);
                 int stepId = rset.getInt(2);
                 int actionId = rset.getInt(3);
                 String owner = rset.getString(4);
@@ -253,7 +253,7 @@ public class JDBCWorkflowStore implements WorkflowStore {
                 String caller = rset.getString(9);
 
                 ArrayList prevIdsList = new ArrayList();
-                stmt2.setLong(1, id);
+                stmt2.setString(1, id);
 
                 ResultSet rs = stmt2.executeQuery();
 
@@ -262,12 +262,12 @@ public class JDBCWorkflowStore implements WorkflowStore {
                     prevIdsList.add(new Long(prevId));
                 }
 
-                long[] prevIds = new long[prevIdsList.size()];
+                String[] prevIds = new String[prevIdsList.size()];
                 int i = 0;
 
                 for (Iterator iterator = prevIdsList.iterator(); iterator.hasNext(); ) {
-                    Long aLong = (Long) iterator.next();
-                    prevIds[i] = aLong.longValue();
+                    String prevId = (String) iterator.next();
+                    prevIds[i] = prevId;
                     i++;
                 }
 
@@ -284,7 +284,7 @@ public class JDBCWorkflowStore implements WorkflowStore {
         }
     }
 
-    public WorkflowEntry findEntry(long theEntryId) throws StoreException {
+    public WorkflowEntry findEntry(String theEntryId) throws StoreException {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rset = null;
@@ -299,7 +299,7 @@ public class JDBCWorkflowStore implements WorkflowStore {
             }
 
             stmt = conn.prepareStatement(sql);
-            stmt.setLong(1, theEntryId);
+            stmt.setString(1, theEntryId);
 
             rset = stmt.executeQuery();
             rset.next();
@@ -315,7 +315,7 @@ public class JDBCWorkflowStore implements WorkflowStore {
         }
     }
 
-    public List findHistorySteps(long entryId) throws StoreException {
+    public List findHistorySteps(String entryId) throws StoreException {
         Connection conn = null;
         PreparedStatement stmt = null;
         PreparedStatement stmt2 = null;
@@ -339,14 +339,14 @@ public class JDBCWorkflowStore implements WorkflowStore {
             }
 
             stmt2 = conn.prepareStatement(sql2);
-            stmt.setLong(1, entryId);
+            stmt.setString(1, entryId);
 
             rset = stmt.executeQuery();
 
             ArrayList currentSteps = new ArrayList();
 
             while (rset.next()) {
-                long id = rset.getLong(1);
+                String id = rset.getString(1);
                 int stepId = rset.getInt(2);
                 int actionId = rset.getInt(3);
                 String owner = rset.getString(4);
@@ -356,22 +356,22 @@ public class JDBCWorkflowStore implements WorkflowStore {
                 String status = rset.getString(8);
                 String caller = rset.getString(9);
 
-                ArrayList prevIdsList = new ArrayList();
-                stmt2.setLong(1, id);
+                ArrayList<String> prevIdsList = new ArrayList();
+                stmt2.setString(1, id);
 
                 ResultSet rs = stmt2.executeQuery();
 
                 while (rs.next()) {
-                    long prevId = rs.getLong(1);
-                    prevIdsList.add(new Long(prevId));
+                    String prevId = rs.getString(1);
+                    prevIdsList.add(prevId);
                 }
 
-                long[] prevIds = new long[prevIdsList.size()];
+                String[] prevIds = new String[prevIdsList.size()];
                 int i = 0;
 
                 for (Iterator iterator = prevIdsList.iterator(); iterator.hasNext(); ) {
-                    Long aLong = (Long) iterator.next();
-                    prevIds[i] = aLong.longValue();
+                    String prevId = String.valueOf(iterator.next());
+                    prevIds[i] = prevId;
                     i++;
                 }
 
@@ -430,7 +430,7 @@ public class JDBCWorkflowStore implements WorkflowStore {
             stmt.setInt(2, actionId);
             stmt.setTimestamp(3, new Timestamp(finishDate.getTime()));
             stmt.setString(4, caller);
-            stmt.setLong(5, step.getId());
+            stmt.setString(5, step.getId());
             stmt.executeUpdate();
 
             SimpleStep theStep = (SimpleStep) step;
@@ -462,8 +462,8 @@ public class JDBCWorkflowStore implements WorkflowStore {
             }
 
             stmt = conn.prepareStatement(sql);
-            stmt.setLong(1, step.getId());
-            stmt.setLong(2, step.getEntryId());
+            stmt.setString(1, step.getId());
+            stmt.setString(2, step.getEntryId());
             stmt.setInt(3, step.getStepId());
             stmt.setInt(4, step.getActionId());
             stmt.setString(5, step.getOwner());
@@ -485,7 +485,7 @@ public class JDBCWorkflowStore implements WorkflowStore {
             stmt.setString(10, step.getCaller());
             stmt.executeUpdate();
 
-            long[] previousIds = step.getPreviousStepIds();
+            String[] previousIds = step.getPreviousStepIds();
 
             if ((previousIds != null) && (previousIds.length > 0)) {
                 sql = "INSERT INTO " + historyPrevTable + " (" + stepId + ", " + stepPreviousId + ") VALUES (?, ?)";
@@ -494,9 +494,9 @@ public class JDBCWorkflowStore implements WorkflowStore {
                 stmt = conn.prepareStatement(sql);
 
                 for (int i = 0; i < previousIds.length; i++) {
-                    long previousId = previousIds[i];
-                    stmt.setLong(1, step.getId());
-                    stmt.setLong(2, previousId);
+                    String previousId = previousIds[i];
+                    stmt.setString(1, step.getId());
+                    stmt.setString(2, previousId);
                     stmt.executeUpdate();
                 }
             }
@@ -509,7 +509,7 @@ public class JDBCWorkflowStore implements WorkflowStore {
 
             cleanup(null, stmt, null);
             stmt = conn.prepareStatement(sql);
-            stmt.setLong(1, step.getId());
+            stmt.setString(1, step.getId());
             stmt.executeUpdate();
 
             sql = "DELETE FROM " + currentTable + " WHERE " + stepId + " = ?";
@@ -520,7 +520,7 @@ public class JDBCWorkflowStore implements WorkflowStore {
 
             cleanup(null, stmt, null);
             stmt = conn.prepareStatement(sql);
-            stmt.setLong(1, step.getId());
+            stmt.setString(1, step.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new StoreException("Unable to move current step to history step for #" + step.getEntryId(), e);
@@ -761,7 +761,7 @@ public class JDBCWorkflowStore implements WorkflowStore {
         }
     }
 
-    protected long getNextStepSequence(Connection c) throws SQLException {
+    protected String getNextStepSequence(Connection c) throws SQLException {
         if (log.isDebugEnabled()) {
             log.debug("Executing SQL statement: " + stepSequence);
         }
@@ -776,24 +776,24 @@ public class JDBCWorkflowStore implements WorkflowStore {
 
             long id = rset.getLong(1);
 
-            return id;
+            return String.valueOf(id);
         } finally {
             cleanup(null, stmt, rset);
         }
     }
 
-    protected void addPreviousSteps(Connection conn, long id, long[] previousIds) throws SQLException {
+    protected void addPreviousSteps(Connection conn, String id, String[] previousIds) throws SQLException {
         if ((previousIds != null) && (previousIds.length > 0)) {
-            if (!((previousIds.length == 1) && (previousIds[0] == 0))) {
+            if (!((previousIds.length == 1) && (previousIds[0] == String.valueOf(0)))) {
                 String sql = "INSERT INTO " + currentPrevTable + " (" + stepId + ", " + stepPreviousId + ") VALUES (?, ?)";
                 log.debug("Executing SQL statement: " + sql);
 
                 PreparedStatement stmt = conn.prepareStatement(sql);
 
                 for (int i = 0; i < previousIds.length; i++) {
-                    long previousId = previousIds[i];
-                    stmt.setLong(1, id);
-                    stmt.setLong(2, previousId);
+                    String previousId = previousIds[i];
+                    stmt.setString(1, id);
+                    stmt.setString(2, previousId);
                     stmt.executeUpdate();
                 }
 
@@ -828,7 +828,7 @@ public class JDBCWorkflowStore implements WorkflowStore {
         }
     }
 
-    protected long createCurrentStep(Connection conn, long entryId, int wfStepId, String owner, Date startDate, Date dueDate, String status) throws SQLException {
+    protected String createCurrentStep(Connection conn, String entryId, int wfStepId, String owner, Date startDate, Date dueDate, String status) throws SQLException {
         String sql = "INSERT INTO " + currentTable + " (" + stepId + ',' + stepEntryId + ", " + stepStepId + ", " + stepActionId + ", " + stepOwner + ", " + stepStartDate + ", " + stepDueDate + ", "
                 + stepFinishDate + ", " + stepStatus + ", " + stepCaller + " ) VALUES (?, ?, ?, null, ?, ?, ?, null, ?, null)";
 
@@ -838,9 +838,9 @@ public class JDBCWorkflowStore implements WorkflowStore {
 
         PreparedStatement stmt = conn.prepareStatement(sql);
 
-        long id = getNextStepSequence(conn);
-        stmt.setLong(1, id);
-        stmt.setLong(2, entryId);
+        String id = getNextStepSequence(conn);
+        stmt.setString(1, id);
+        stmt.setString(2, entryId);
         stmt.setInt(3, wfStepId);
         stmt.setString(4, owner);
         stmt.setTimestamp(5, new Timestamp(startDate.getTime()));

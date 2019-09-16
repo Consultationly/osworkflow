@@ -55,7 +55,7 @@ public class MySQLWorkflowStore extends JDBCWorkflowStore {
 		}
 	}
 
-	protected long getNextStepSequence(Connection c) throws SQLException {
+	protected String getNextStepSequence(Connection c) throws SQLException {
 		PreparedStatement stmt = null;
 		ResultSet rset = null;
 
@@ -68,7 +68,7 @@ public class MySQLWorkflowStore extends JDBCWorkflowStore {
 
 			long id = rset.getLong(1);
 
-			return id;
+			return String.valueOf(id);
 		} finally {
 			cleanup(null, stmt, rset);
 		}

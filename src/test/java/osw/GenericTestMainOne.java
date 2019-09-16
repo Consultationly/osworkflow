@@ -18,7 +18,7 @@ public class GenericTestMainOne {
 
 		Workflow wf = (Workflow) beanFactory.getBean("workflow");
 
-		long id = 89;
+		String id = "89";
 
 		try {
 			id = wf.initialize("c4cfd35c-78ac-4655-9274-c59f0927ab88", 500, new HashMap<String, String>());

@@ -21,7 +21,7 @@ public class GenericTestMainTwo {
 
 		Workflow wf = (Workflow) beanFactory.getBean("workflow");
 
-		long id = 308;
+		String id = "308";
 
 		// com.opensymphony.workflow.util.beanshell.BeanShellFunctionProvider
 

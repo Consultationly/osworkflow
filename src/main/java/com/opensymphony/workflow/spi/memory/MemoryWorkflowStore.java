@@ -45,12 +45,12 @@ public class MemoryWorkflowStore implements WorkflowStore {
 	// ~ Methods
 	// ////////////////////////////////////////////////////////////////
 
-	public void setEntryState(long entryId, int state) throws StoreException {
+	public void setEntryState(String entryId, int state) throws StoreException {
 		SimpleWorkflowEntry theEntry = (SimpleWorkflowEntry) findEntry(entryId);
 		theEntry.setState(state);
 	}
 
-	public PropertySet getPropertySet(long entryId) {
+	public PropertySet getPropertySet(String entryId) {
 		PropertySet ps = (PropertySet) propertySetCache.get(new Long(entryId));
 
 		if (ps == null) {
@@ -61,9 +61,9 @@ public class MemoryWorkflowStore implements WorkflowStore {
 		return ps;
 	}
 
-	public Step createCurrentStep(long entryId, int stepId, String owner, Date startDate, Date dueDate, String status, long[] previousIds) {
+	public Step createCurrentStep(String entryId, int stepId, String owner, Date startDate, Date dueDate, String status, String[] previousIds) {
 		long id = globalStepId++;
-		SimpleStep step = new SimpleStep(id, entryId, stepId, 0, owner, startDate, dueDate, null, status, previousIds, null);
+		SimpleStep step = new SimpleStep(String.valueOf(id), entryId, stepId, 0, owner, startDate, dueDate, null, status, previousIds, null);
 
 		List currentSteps = (List) currentStepsCache.get(new Long(entryId));
 
@@ -90,14 +90,14 @@ public class MemoryWorkflowStore implements WorkflowStore {
 	}
 
 	public WorkflowEntry createEntry(String workflowName) {
-		long id = globalEntryId++;
+		String id = String.valueOf(globalEntryId++);
 		SimpleWorkflowEntry entry = new SimpleWorkflowEntry(id, workflowName, WorkflowEntry.CREATED);
 		entryCache.put(new Long(id), entry);
 
 		return entry;
 	}
 
-	public List findCurrentSteps(long entryId) {
+	public List findCurrentSteps(String entryId) {
 		List currentSteps = (List) currentStepsCache.get(new Long(entryId));
 
 		if (currentSteps == null) {
@@ -108,11 +108,11 @@ public class MemoryWorkflowStore implements WorkflowStore {
 		return new ArrayList(currentSteps);
 	}
 
-	public WorkflowEntry findEntry(long entryId) {
+	public WorkflowEntry findEntry(String entryId) {
 		return (WorkflowEntry) entryCache.get(new Long(entryId));
 	}
 
-	public List findHistorySteps(long entryId) {
+	public List findHistorySteps(String entryId) {
 		List historySteps = (List) historyStepsCache.get(new Long(entryId));
 
 		if (historySteps == null) {

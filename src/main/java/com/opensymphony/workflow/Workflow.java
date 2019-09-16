@@ -42,7 +42,7 @@ public interface Workflow {
 	 * @deprecated use {@link #getAvailableActions(long, Map)} with an empty Map
 	 *             instead.
 	 */
-	public int[] getAvailableActions(long id);
+	public int[] getAvailableActions(String id);
 
 	/**
 	 * Returns a Collection of Step objects that are the current steps of the
@@ -52,7 +52,7 @@ public interface Workflow {
 	 *            The workflow instance id.
 	 * @return The steps that the workflow instance is currently in.
 	 */
-	public List getCurrentSteps(long id);
+	public List getCurrentSteps(String id);
 
 	/**
 	 * Return the state of the specified workflow instance id.
@@ -61,7 +61,7 @@ public interface Workflow {
 	 *            The workflow instance id.
 	 * @return int The state id of the specified workflow
 	 */
-	public int getEntryState(long id);
+	public int getEntryState(String id);
 
 	/**
 	 * Returns a list of all steps that are completed for the given workflow
@@ -72,7 +72,7 @@ public interface Workflow {
 	 * @return a List of Steps
 	 * @see com.opensymphony.workflow.spi.Step
 	 */
-	public List getHistorySteps(long id);
+	public List getHistorySteps(String id);
 
 	/**
 	 * Get the PropertySet for the specified workflow instance id.
@@ -80,7 +80,7 @@ public interface Workflow {
 	 * @param id
 	 *            The workflow instance id.
 	 */
-	public PropertySet getPropertySet(long id);
+	public PropertySet getPropertySet(String id);
 
 	/**
 	 * Get a collection (Strings) of currently defined permissions for the
@@ -93,7 +93,7 @@ public interface Workflow {
 	 * @deprecated use {@link #getSecurityPermissions(long, java.util.Map)} with
 	 *             a null map instead.
 	 */
-	public List getSecurityPermissions(long id);
+	public List getSecurityPermissions(String id);
 
 	/**
 	 * Get a collection (Strings) of currently defined permissions for the
@@ -106,7 +106,7 @@ public interface Workflow {
 	 * @return A List of permissions specified currently (a permission is a
 	 *         string name).
 	 */
-	public List getSecurityPermissions(long id, Map inputs);
+	public List getSecurityPermissions(String id, Map inputs);
 
 	/**
 	 * Get the workflow descriptor for the specified workflow name.
@@ -122,7 +122,7 @@ public interface Workflow {
 	 * @param id
 	 *            the workflow instance id.
 	 */
-	public String getWorkflowName(long id);
+	public String getWorkflowName(String id);
 
 	/**
 	 * Check if the calling user has enough permissions to initialise the
@@ -148,7 +148,7 @@ public interface Workflow {
 	 * @return true if the state of the workflow can be modified, false
 	 *         otherwise.
 	 */
-	public boolean canModifyEntryState(long id, int newState);
+	public boolean canModifyEntryState(String id, int newState);
 
 	/**
 	 * Modify the state of the specified workflow instance.
@@ -163,7 +163,7 @@ public interface Workflow {
 	 *            then all current steps are moved to history steps. If the new
 	 *            state is
 	 */
-	public void changeEntryState(long id, int newState) throws WorkflowException;
+	public void changeEntryState(String id, int newState) throws WorkflowException;
 
 	/**
 	 * Perform an action on the specified workflow instance.
@@ -181,7 +181,7 @@ public interface Workflow {
 	 *             if the action is invalid for the specified workflow
 	 *             instance's current state.
 	 */
-	public void doAction(long id, int actionId, Map inputs) throws InvalidInputException, WorkflowException;
+	public void doAction(String id, int actionId, Map inputs) throws InvalidInputException, WorkflowException;
 
 	/**
 	 * Executes a special trigger-function using the context of the given
@@ -193,7 +193,7 @@ public interface Workflow {
 	 * @param triggerId
 	 *            The id of the speciail trigger-function
 	 */
-	public void executeTriggerFunction(long id, int triggerId) throws WorkflowException;
+	public void executeTriggerFunction(String id, int triggerId) throws WorkflowException;
 
 	/**
 	 * Initializes a workflow so that it can begin processing. A workflow must
@@ -214,7 +214,7 @@ public interface Workflow {
 	 *             if the specified initial action is invalid for the specified
 	 *             workflow.
 	 */
-	public long initialize(String workflowName, int initialAction, Map inputs) throws InvalidRoleException, InvalidInputException, WorkflowException, InvalidEntryStateException,
+	public String initialize(String workflowName, int initialAction, Map inputs) throws InvalidRoleException, InvalidInputException, WorkflowException, InvalidEntryStateException,
 			InvalidActionException;
 
 	/**
@@ -243,7 +243,7 @@ public interface Workflow {
 	 *             if the specified id does not exist, or if its workflow
 	 *             descriptor is no longer available or has become invalid.
 	 */
-	int[] getAvailableActions(long id, Map inputs);
+	int[] getAvailableActions(String id, Map inputs);
 
 	/**
 	 * Set the configuration for this workflow. If not set, then the workflow

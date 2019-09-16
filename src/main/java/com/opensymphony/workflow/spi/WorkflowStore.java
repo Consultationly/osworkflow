@@ -12,6 +12,8 @@ import com.opensymphony.workflow.query.WorkflowQuery;
 
 import java.util.*;
 
+import org.springframework.stereotype.Service;
+
 /**
  * Interface for pluggable workflow stores configured in osworkflow.xml. Only
  * one instance of a workflow store is ever created, meaning that if your
@@ -32,7 +34,7 @@ public interface WorkflowStore {
 	 * @param state
 	 *            The state to move the workflow instance to.
 	 */
-	public void setEntryState(long entryId, int state) throws StoreException;
+	public void setEntryState(String entryId, int state) throws StoreException;
 
 	/**
 	 * Returns a PropertySet that is associated with this workflow instance ID.
@@ -41,7 +43,7 @@ public interface WorkflowStore {
 	 *            The workflow instance id.
 	 * @return a property set unique to this entry ID
 	 */
-	public PropertySet getPropertySet(long entryId) throws StoreException;
+	public PropertySet getPropertySet(String entryId) throws StoreException;
 
 	/**
 	 * Persists a step with the given parameters.
@@ -61,7 +63,7 @@ public interface WorkflowStore {
 	 *            the previous step IDs
 	 * @return a representation of the workflow step persisted
 	 */
-	public Step createCurrentStep(long entryId, int stepId, String owner, Date startDate, Date dueDate, String status, long[] previousIds) throws StoreException;
+	public Step createCurrentStep(String entryId, int stepId, String owner, Date startDate, Date dueDate, String status, String[] previousIds) throws StoreException;
 
 	/**
 	 * Persists a new workflow entry that has <b>not been initialized</b>.
@@ -80,7 +82,7 @@ public interface WorkflowStore {
 	 * @return a List of Steps
 	 * @see com.opensymphony.workflow.spi.Step
 	 */
-	public List findCurrentSteps(long entryId) throws StoreException;
+	public List findCurrentSteps(String entryId) throws StoreException;
 
 	/**
 	 * Pulls up the workflow entry data for the entry ID given.
@@ -89,7 +91,7 @@ public interface WorkflowStore {
 	 *            The workflow instance id.
 	 * @return a representation of the workflow instance persisted
 	 */
-	public WorkflowEntry findEntry(long entryId) throws StoreException;
+	public WorkflowEntry findEntry(String entryId) throws StoreException;
 
 	/**
 	 * Returns a list of all steps that are finished for the given workflow
@@ -100,7 +102,7 @@ public interface WorkflowStore {
 	 * @return a List of Steps
 	 * @see com.opensymphony.workflow.spi.Step
 	 */
-	public List findHistorySteps(long entryId) throws StoreException;
+	public List findHistorySteps(String entryId) throws StoreException;
 
 	/**
 	 * Called once when the store is first created.

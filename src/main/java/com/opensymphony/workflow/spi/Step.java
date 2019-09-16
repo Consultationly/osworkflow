@@ -31,7 +31,7 @@ public interface Step {
 	/**
 	 * Returns the unique ID of the workflow entry.
 	 */
-	public long getEntryId();
+	public String getEntryId();
 
 	/**
 	 * Returns the date this step was finished, or null if it isn't finished.
@@ -41,7 +41,7 @@ public interface Step {
 	/**
 	 * Returns the unique ID of this step.
 	 */
-	public long getId();
+	public String getId();
 
 	/**
 	 * Returns the owner of this step, or null if there is no owner.
@@ -52,7 +52,7 @@ public interface Step {
 	 * Returns the unique ID of the previous step, or 0 if this is the first
 	 * step.
 	 */
-	public long[] getPreviousStepIds();
+	public String[] getPreviousStepIds();
 
 	/**
 	 * Returns the date that this step was created.

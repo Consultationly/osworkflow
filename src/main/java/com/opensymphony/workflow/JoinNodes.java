@@ -61,24 +61,24 @@ public class JoinNodes {
 			return null;
 		}
 
-		public long getEntryId() {
-			return -1;
+		public String getEntryId() {
+			return "-1";
 		}
 
 		public Date getFinishDate() {
 			return null;
 		}
 
-		public long getId() {
-			return -1;
+		public String getId() {
+			return String.valueOf("-1");
 		}
 
 		public String getOwner() {
 			return null;
 		}
 
-		public long[] getPreviousStepIds() {
-			return new long[0];
+		public String[] getPreviousStepIds() {
+			return new String[0];
 		}
 
 		public Date getStartDate() {

@@ -28,11 +28,11 @@ public class SimpleStep implements Step, Serializable {
 	private String caller;
 	private String owner;
 	private String status;
-	private long[] previousStepIds;
+	private String[] previousStepIds;
 	private int actionId;
 	private int stepId;
-	private long entryId;
-	private long id;
+	private String entryId;
+	private String id;
 
 	// ~ Constructors
 	// ///////////////////////////////////////////////////////////
@@ -40,7 +40,7 @@ public class SimpleStep implements Step, Serializable {
 	public SimpleStep() {
 	}
 
-	public SimpleStep(long id, long entryId, int stepId, int actionId, String owner, Date startDate, Date dueDate, Date finishDate, String status, long[] previousStepIds, String caller) {
+	public SimpleStep(String id, String entryId, int stepId, int actionId, String owner, Date startDate, Date dueDate, Date finishDate, String status, String[] previousStepIds, String caller) {
 		this.id = id;
 		this.entryId = entryId;
 		this.stepId = stepId;
@@ -77,11 +77,11 @@ public class SimpleStep implements Step, Serializable {
 		return dueDate;
 	}
 
-	public void setEntryId(long entryId) {
+	public void setEntryId(String entryId) {
 		this.entryId = entryId;
 	}
 
-	public long getEntryId() {
+	public String getEntryId() {
 		return entryId;
 	}
 
@@ -93,11 +93,11 @@ public class SimpleStep implements Step, Serializable {
 		return finishDate;
 	}
 
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
-	public long getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -109,11 +109,11 @@ public class SimpleStep implements Step, Serializable {
 		return owner;
 	}
 
-	public void setPreviousStepIds(long[] previousStepIds) {
+	public void setPreviousStepIds(String[] previousStepIds) {
 		this.previousStepIds = previousStepIds;
 	}
 
-	public long[] getPreviousStepIds() {
+	public String[] getPreviousStepIds() {
 		return previousStepIds;
 	}
 

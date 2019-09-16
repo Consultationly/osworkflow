@@ -18,12 +18,12 @@ public class SimpleWorkflowEntry implements WorkflowEntry, Serializable {
 	protected String workflowName;
 	protected boolean initialized;
 	protected int state;
-	protected long id;
+	protected String id;
 
 	// ~ Constructors
 	// ///////////////////////////////////////////////////////////
 
-	public SimpleWorkflowEntry(long id, String workflowName, int state) {
+	public SimpleWorkflowEntry(String id, String workflowName, int state) {
 		this.id = id;
 		this.workflowName = workflowName;
 		this.state = state;
@@ -32,11 +32,11 @@ public class SimpleWorkflowEntry implements WorkflowEntry, Serializable {
 	// ~ Methods
 	// ////////////////////////////////////////////////////////////////
 
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
-	public long getId() {
+	public String getId() {
 		return id;
 	}
 

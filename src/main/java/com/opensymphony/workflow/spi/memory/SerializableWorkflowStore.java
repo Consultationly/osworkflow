@@ -57,9 +57,9 @@ public class SerializableWorkflowStore extends MemoryWorkflowStore {
 		return storeFile;
 	}
 
-	public Step createCurrentStep(long entryId, int stepId, String owner, Date startDate, Date dueDate, String status, long[] previousIds) {
+	public Step createCurrentStep(String entryId, int stepId, String owner, Date startDate, Date dueDate, String status, String[] previousIds) {
 		long id = SerializableCache.getInstance().globalStepId++;
-		SimpleStep step = new SimpleStep(id, entryId, stepId, 0, owner, startDate, dueDate, null, status, previousIds, null);
+		SimpleStep step = new SimpleStep(String.valueOf(id), entryId, stepId, 0, owner, startDate, dueDate, null, status, previousIds, null);
 
 		List currentSteps = (List) SerializableCache.getInstance().currentStepsCache.get(new Long(entryId));
 
@@ -75,7 +75,7 @@ public class SerializableWorkflowStore extends MemoryWorkflowStore {
 	}
 
 	public WorkflowEntry createEntry(String workflowName) {
-		long id = SerializableCache.getInstance().globalEntryId++;
+		String id = String.valueOf(SerializableCache.getInstance().globalEntryId++);
 		SimpleWorkflowEntry entry = new SimpleWorkflowEntry(id, workflowName, WorkflowEntry.CREATED);
 		SerializableCache.getInstance().entryCache.put(new Long(id), entry);
 		SerializableCache.store();

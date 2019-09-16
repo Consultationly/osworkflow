@@ -60,7 +60,7 @@ public class AbstractWorkflow implements Workflow {
      * @deprecated use {@link #getAvailableActions(long, Map)} with an empty Map
      * instead.
      */
-    public int[] getAvailableActions(long id) {
+    public int[] getAvailableActions(String id) {
         return getAvailableActions(id, new HashMap());
     }
 
@@ -75,7 +75,7 @@ public class AbstractWorkflow implements Workflow {
      *                                  descriptor is no longer available or has become invalid.
      * @ejb.interface-method
      */
-    public int[] getAvailableActions(long id, Map inputs) {
+    public int[] getAvailableActions(String id, Map inputs) {
         try {
             WorkflowStore store = getPersistence();
             WorkflowEntry entry = store.findEntry(id);
@@ -175,7 +175,7 @@ public class AbstractWorkflow implements Workflow {
     /**
      * @ejb.interface-method
      */
-    public List getCurrentSteps(long id) {
+    public List getCurrentSteps(String id) {
         try {
             WorkflowStore store = getPersistence();
 
@@ -190,7 +190,7 @@ public class AbstractWorkflow implements Workflow {
     /**
      * @ejb.interface-method
      */
-    public int getEntryState(long id) {
+    public int getEntryState(String id) {
         try {
             WorkflowStore store = getPersistence();
 
@@ -205,7 +205,7 @@ public class AbstractWorkflow implements Workflow {
     /**
      * @ejb.interface-method
      */
-    public List getHistorySteps(long id) {
+    public List getHistorySteps(String id) {
         try {
             WorkflowStore store = getPersistence();
 
@@ -238,7 +238,7 @@ public class AbstractWorkflow implements Workflow {
      * @param id The workflow ID
      * @ejb.interface-method
      */
-    public PropertySet getPropertySet(long id) {
+    public PropertySet getPropertySet(String id) {
         PropertySet ps = null;
 
         try {
@@ -265,14 +265,14 @@ public class AbstractWorkflow implements Workflow {
     /**
      * @ejb.interface-method
      */
-    public List getSecurityPermissions(long id) {
+    public List getSecurityPermissions(String id) {
         return getSecurityPermissions(id, null);
     }
 
     /**
      * @ejb.interface-method
      */
-    public List getSecurityPermissions(long id, Map inputs) {
+    public List getSecurityPermissions(String id, Map inputs) {
         try {
             WorkflowStore store = getPersistence();
             WorkflowEntry entry = store.findEntry(id);
@@ -337,7 +337,7 @@ public class AbstractWorkflow implements Workflow {
     /**
      * @ejb.interface-method
      */
-    public String getWorkflowName(long id) {
+    public String getWorkflowName(String id) {
         try {
             WorkflowStore store = getPersistence();
             WorkflowEntry entry = store.findEntry(id);
@@ -385,8 +385,8 @@ public class AbstractWorkflow implements Workflow {
     public boolean canInitialize(String workflowName, int initialAction, Map inputs) {
         final String mockWorkflowName = workflowName;
         WorkflowEntry mockEntry = new WorkflowEntry() {
-            public long getId() {
-                return 0;
+            public String getId() {
+                return "0";
             }
 
             public String getWorkflowName() {
@@ -428,7 +428,7 @@ public class AbstractWorkflow implements Workflow {
     /**
      * @ejb.interface-method
      */
-    public boolean canModifyEntryState(long id, int newState) {
+    public boolean canModifyEntryState(String id, int newState) {
         try {
             WorkflowStore store = getPersistence();
             WorkflowEntry entry = store.findEntry(id);
@@ -485,7 +485,7 @@ public class AbstractWorkflow implements Workflow {
         return false;
     }
 
-    public void changeEntryState(long id, int newState) throws WorkflowException {
+    public void changeEntryState(String id, int newState) throws WorkflowException {
         WorkflowStore store = getPersistence();
         WorkflowEntry entry = store.findEntry(id);
 
@@ -512,12 +512,12 @@ public class AbstractWorkflow implements Workflow {
         }
     }
 
-    public void doAction(long id, int actionId, Map inputs) throws WorkflowException {
+    public void doAction(String id, int actionId, Map inputs) throws WorkflowException {
         WorkflowStore store = getPersistence();
         WorkflowEntry entry = store.findEntry(id);
 
         // Chanthu
-        inputs.put(WORKFLOW_ID_KEY, Long.toString(entry.getId()));
+        inputs.put(WORKFLOW_ID_KEY, entry.getId());
         inputs.put(WORKFLOW_NAME_KEY, entry.getWorkflowName());
 
         if (entry.getState() != WorkflowEntry.ACTIVATED) {
@@ -586,7 +586,7 @@ public class AbstractWorkflow implements Workflow {
         }
     }
 
-    public void executeTriggerFunction(long id, int triggerId) throws WorkflowException {
+    public void executeTriggerFunction(String id, int triggerId) throws WorkflowException {
         WorkflowStore store = getPersistence();
         WorkflowEntry entry = store.findEntry(id);
 
@@ -604,14 +604,14 @@ public class AbstractWorkflow implements Workflow {
         executeFunction(wf.getTriggerFunction(triggerId), transientVars, ps);
     }
 
-    public long initialize(String workflowName, int initialAction, Map inputs) throws InvalidRoleException, InvalidInputException, WorkflowException {
+    public String initialize(String workflowName, int initialAction, Map inputs) throws InvalidRoleException, InvalidInputException, WorkflowException {
         WorkflowDescriptor wf = getConfiguration().getWorkflow(workflowName);
 
         WorkflowStore store = getPersistence();
         WorkflowEntry entry = store.createEntry(workflowName);
 
         // Chanthu
-        inputs.put(WORKFLOW_ID_KEY, Long.toString(entry.getId()));
+        inputs.put(WORKFLOW_ID_KEY, entry.getId());
         inputs.put(WORKFLOW_NAME_KEY, entry.getWorkflowName());
 
         // start with a memory property set, but clone it after we have an ID
@@ -638,7 +638,7 @@ public class AbstractWorkflow implements Workflow {
             throw e;
         }
 
-        long entryId = entry.getId();
+        String entryId = entry.getId();
 
         // now clone the memory PS to the real PS
         // PropertySetManager.clone(ps, store.getPropertySet(entryId));
@@ -710,7 +710,7 @@ public class AbstractWorkflow implements Workflow {
         return l;
     }
 
-    protected int[] getAvailableAutoActions(long id, Map inputs) {
+    protected int[] getAvailableAutoActions(String id, Map inputs) {
         try {
             WorkflowStore store = getPersistence();
             WorkflowEntry entry = store.findEntry(id);
@@ -812,7 +812,7 @@ public class AbstractWorkflow implements Workflow {
         return getConfiguration().getWorkflowStore();
     }
 
-    protected void checkImplicitFinish(ActionDescriptor action, long id) throws WorkflowException {
+    protected void checkImplicitFinish(ActionDescriptor action, String id) throws WorkflowException {
         WorkflowStore store = getPersistence();
         WorkflowEntry entry = store.findEntry(id);
 
@@ -841,7 +841,7 @@ public class AbstractWorkflow implements Workflow {
      * Mark the specified entry as completed, and move all current steps to
      * history.
      */
-    protected void completeEntry(ActionDescriptor action, long id, Collection currentSteps, int state) throws StoreException {
+    protected void completeEntry(ActionDescriptor action, String id, Collection currentSteps, int state) throws StoreException {
         getPersistence().setEntryState(id, state);
 
         Iterator i = new ArrayList(currentSteps).iterator();
@@ -1146,10 +1146,10 @@ public class AbstractWorkflow implements Workflow {
                         moveToHistoryStep = step;
                     }
 
-                    long[] previousIds = null;
+                    String[] previousIds = null;
 
                     if (step != null) {
-                        previousIds = new long[]{step.getId()};
+                        previousIds = new String[]{step.getId()};
                     }
 
                     createNewCurrentStep(resultDescriptor, entry, store, action.getId(), moveToHistoryStep, previousIds, transientVars, ps);
@@ -1222,7 +1222,7 @@ public class AbstractWorkflow implements Workflow {
                     executeFunction(function, transientVars, ps);
                 }
 
-                long[] previousIds = new long[joinSteps.size()];
+                String[] previousIds = new String[joinSteps.size()];
                 int i = 1;
 
                 for (Iterator iterator = joinSteps.iterator(); iterator.hasNext(); ) {
@@ -1259,10 +1259,10 @@ public class AbstractWorkflow implements Workflow {
             }
         } else {
             // normal finish, no splits or joins
-            long[] previousIds = null;
+            String[] previousIds = null;
 
             if (step != null) {
-                previousIds = new long[]{step.getId()};
+                previousIds = new String[]{step.getId()};
             }
 
             if (!action.isFinish()) {
@@ -1446,7 +1446,7 @@ public class AbstractWorkflow implements Workflow {
         return passesConditions(conditions, new HashMap(transientVars), ps, 0);
     }
 
-    private Step createNewCurrentStep(ResultDescriptor theResult, WorkflowEntry entry, WorkflowStore store, int actionId, Step currentStep, long[] previousIds, Map transientVars, PropertySet ps)
+    private Step createNewCurrentStep(ResultDescriptor theResult, WorkflowEntry entry, WorkflowStore store, int actionId, Step currentStep, String[] previousIds, Map transientVars, PropertySet ps)
             throws WorkflowException {
         try {
             int nextStep = theResult.getStep();
@@ -1465,7 +1465,7 @@ public class AbstractWorkflow implements Workflow {
             }
 
             if (previousIds == null) {
-                previousIds = new long[0];
+                previousIds = new String[0];
             }
 
             String owner = theResult.getOwner();

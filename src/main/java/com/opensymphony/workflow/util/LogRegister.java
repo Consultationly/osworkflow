@@ -50,7 +50,7 @@ public class LogRegister implements Register {
 	 */
 	public Object registerVariable(WorkflowContext context, WorkflowEntry entry, Map args, PropertySet ps) {
 		String workflowname = "unknown";
-		long workflow_id = -1;
+		String workflow_id = "-1";
 
 		if (entry != null) {
 			workflowname = entry.getWorkflowName();
@@ -73,7 +73,7 @@ public class LogRegister implements Register {
 		String category = categoryName + "." + workflowname;
 
 		if (groupByInstance) {
-			category += ("." + (Long.toString(workflow_id)));
+			category += ("." + (workflow_id));
 		}
 
 		Log log = LogFactory.getLog(category);
