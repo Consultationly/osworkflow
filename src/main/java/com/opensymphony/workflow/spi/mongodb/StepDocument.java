@@ -16,7 +16,7 @@ import com.opensymphony.workflow.spi.Step;
 * @author stephen.lane
 */
 
-@Document(collection = "workflow_current_step")
+@Document(collection = "workflow_step")
 public class StepDocument implements Step {
 
     @Id
@@ -165,6 +165,14 @@ public class StepDocument implements Step {
 
     public int getStepId() {
         return stepId;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (!(obj instanceof StepDocument)) return false;
+        StepDocument o = (StepDocument) obj;
+        return o.getId().equals(this.getId());
     }
 }
 

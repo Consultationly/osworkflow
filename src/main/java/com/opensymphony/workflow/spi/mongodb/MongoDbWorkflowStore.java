@@ -135,7 +135,7 @@ public class MongoDbWorkflowStore implements WorkflowStore {
         WorkflowEntryDocument entry = mongoDbWorkflowEntryRepository.findById(step.getEntryId()).orElse(null);
         StepDocument historyStep = (StepDocument) step;
 
-        entry.getCurrentSteps().remove(step);
+        entry.getCurrentSteps().remove(historyStep);
         entry.getHistorySteps().add(historyStep);
         mongoDbWorkflowEntryRepository.save(entry);
     }
