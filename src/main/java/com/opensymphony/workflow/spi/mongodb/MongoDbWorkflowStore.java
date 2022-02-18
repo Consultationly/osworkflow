@@ -7,12 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
-import org.springframework.beans.factory.annotation.Autowire;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.stereotype.Component;
-
 import com.opensymphony.module.propertyset.PropertySet;
 import com.opensymphony.workflow.StoreException;
 import com.opensymphony.workflow.query.WorkflowExpressionQuery;
@@ -22,9 +16,6 @@ import com.opensymphony.workflow.spi.WorkflowEntry;
 import com.opensymphony.workflow.spi.WorkflowStore;
 
 public class MongoDbWorkflowStore implements WorkflowStore {
-
-//    @Inject MongoDbWorkflowEntryRepository mongoDbWorkflowEntryRepository;
-//    @Inject MongoDbStepRepository mongoDbStepRepository;
 
     @Override
     public void setEntryState(String entryId, int state) throws StoreException {
