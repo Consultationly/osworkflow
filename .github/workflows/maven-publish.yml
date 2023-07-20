@@ -21,10 +21,14 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '8'
-        maven-version: '3.9.1'
         distribution: 'temurin'
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
+        
+    - name: Setup Maven Action
+      uses: s4u/setup-maven-action@v1.2.1
+      with:
+        maven-version: '3.9.1'
 
     - name: Build with Maven
       run: mvn -B package --file pom.xml
