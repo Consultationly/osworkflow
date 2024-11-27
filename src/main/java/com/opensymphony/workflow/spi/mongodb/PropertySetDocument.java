@@ -42,6 +42,10 @@ public class PropertySetDocument implements Serializable {
     private int intValue;
     @Field("long_value")
     private long longValue;
+    
+   public PropertySetDocument() {
+    	
+    }
 
     public PropertySetDocument(String entityName, String entityId, String key) {
         super();

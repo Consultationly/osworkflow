@@ -16,7 +16,6 @@ import com.opensymphony.workflow.spi.WorkflowEntry;
 *
 * @author stephen.lane
 */
-
 @Document(collection = "workflow_entry")
 public class WorkflowEntryDocument implements Serializable {
 
@@ -33,6 +32,9 @@ public class WorkflowEntryDocument implements Serializable {
     @DBRef
     private List<StepDocument> historySteps;
 
+    public WorkflowEntryDocument() {
+    	
+    }
 
     public WorkflowEntryDocument(String workflowName, int state) {
         this.workflowName = workflowName;

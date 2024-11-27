@@ -6,12 +6,12 @@
 
     <groupId>com.medapp</groupId>
     <artifactId>osworkflow</artifactId>
-    <version>3.0</version>
+    <version>3.1</version>
     <packaging>jar</packaging>
     <properties>
-        <spring.framework.version>5.1.8.RELEASE</spring.framework.version>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <spring.framework.version>6.2.0</spring.framework.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
   <distributionManagement>
@@ -71,7 +71,7 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-mongodb</artifactId>
-            <version>2.1.8.RELEASE</version>
+            <version>4.4.0</version>
         </dependency>
         <dependency>
             <groupId>javax.inject</groupId>
